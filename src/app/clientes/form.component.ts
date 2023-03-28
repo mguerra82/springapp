@@ -15,6 +15,7 @@ export class FormComponent {
   public cliente: Cliente = new Cliente();
   public titulo:string = 'CrearFormulario';
   
+  
   public errores: string[] | undefined
   
 
