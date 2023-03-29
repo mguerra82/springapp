@@ -74,8 +74,9 @@ ngOnInit(): void {
     },
     err =>{
       this.errores = err.error.errors as string[];
+      Swal.fire('Cliente actualizado', `${err.error.mensaje}`+' verifique los campos obligatiros y que el correo no este duplicado', 'error')
       console.error('CODIGO DEL ERROR::.....',err.status);
-      console.error(err.error.erros);
+      console.error(err);
     })
   }
 

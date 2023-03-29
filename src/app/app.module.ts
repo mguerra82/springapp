@@ -12,6 +12,12 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormComponent } from './clientes/form.component';
 import { FormsModule  } from '@angular/forms';
 
+
+import  localeES from '@angular/common/locales/es-GT';
+import { DatePipe, formatDate, registerLocaleData } from '@angular/common';
+
+registerLocaleData(localeES, 'es');
+
 const routes: Routes = [
   {path: '', redirectTo: '/cliente', pathMatch:'full'},
   {path: 'directiva', component: DirectivaComponent},
