@@ -13,7 +13,7 @@ import { ClientesService } from './clientes.service';
 export class FormComponent {
 
   public cliente: Cliente = new Cliente();
-  public titulo:string = 'CrearFormulario';
+  public titulo:string    = 'CrearFormulario';
   
   public errores: string[] | undefined
   
@@ -42,19 +42,23 @@ ngOnInit(): void {
 
   create(): void{
     this.clienteService.create(this.cliente)
-    .subscribe( cliente => {
+    .subscribe( json => {
+      
       this.router.navigate(['/clientes']) 
+      console.log('Cliente:.......', json);
         Swal.fire('Nuevo cliente', 
-          `El cliente  ${cliente.apellido} creado con exito`, 'success')
-        console.log('CLIENTES.......',cliente.cliente.nombre);
+          `El cliente ${json.nombre} ha sido creado con exito`, 'success')
+        
         //this.router.navigate(['/clientes'])
       },
       //capturar errores de back
       err =>{
+        Swal.fire('Error', err.error.mensaje, 'error');
+
         this.errores = err.error.errors as string[];
         console.error('CODIGO DEL ERROR::.....' + err.status);
-        console.error('ERRORES',this.errores);
-        console.error(err.error.errors);
+        console.error('ERRORES',err);
+        
       }
     )
     console.log(JSON.stringify(this.cliente.nombre));
@@ -63,8 +67,9 @@ ngOnInit(): void {
   update():void{
     this.clienteService.update(this.cliente)
     .subscribe(json =>{
+      console.log('Obejto de respuesta',json);
       this.router.navigate(['/clientes'])
-      Swal.fire('Cliente actualizado', `${json.mensaje}: ${json.cliente.apellido} ${json.cliente.nombre}  con exito`, 'success')
+      Swal.fire('Cliente actualizado', `${json.mensaje}${json.cliente.nombre} ${json.cliente.apellido} fue con exito`, 'success')
     },
     err =>{
       this.errores = err.error.errors as string[];

@@ -29,12 +29,14 @@ export class ClientesService {
   }
 
   create(cliente: Cliente): Observable<any>{
-    return this.http.post(this.urlEndPoint, cliente, {headers: this.httpHeader})
+    return this.http.post
+    
+    (this.urlEndPoint, cliente, {headers: this.httpHeader})
     .pipe(
-      map((response: any) => response.cliente as Cliente),
       catchError( e => {
 
         if(e.status=400){
+          console.log('error:.....', e.error.mensaje);
           return throwError(e);
         }
 
