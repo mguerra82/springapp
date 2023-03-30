@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { tap } from 'rxjs';
 import Swal from 'sweetalert2';
 import { Cliente } from './cliente';
 import { ClientesService } from './clientes.service';
@@ -17,10 +18,18 @@ export class ClientesComponent {
     
   }
   ngOnInit(): void {
-    this.clienteService.getClientes().subscribe(
-      
-      clientes => this.clientes = clientes
-    );
+    let page = 0;
+    this.clienteService.getClientes(page)
+    .pipe(
+      tap((response:any) =>{
+        console.log('Cliente component: tap 3', response.content);
+       /* (response.response as Cliente[]).forEach((cliente:any) =>{
+         // console.log('RESPONCE CONTENIDO::......',response);
+        })*/
+      })
+    )
+    .subscribe(response => this.clientes = response.content as Cliente[]);
+  
     console.log("Servicio desde el get");
   }
 

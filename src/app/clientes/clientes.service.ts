@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
 import { Cliente } from './cliente';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 
 import {  formatDate } from '@angular/common';
 
@@ -23,19 +23,24 @@ export class ClientesService {
   constructor(private http: HttpClient,
     private router:Router) { }
 
-  getClientes(): Observable<Cliente[]>{
+  getClientes(page: number): Observable<Cliente[]>{
     //return of(CLIENTES);
     
-    return this.http.get(this.urlEndPoint).pipe(
+    return this.http.get(this.urlEndPoint+'/page/'+ page).pipe(
+      tap((response:any) => {
+        (response.content as Cliente[]).forEach(cliente =>{
+
+        });
+      }),
+
       /**
        * Para el nombre y apellido en mayuscula
        */
-      map( response  =>{
+      map( (response : any)  =>{
         
-        let cliente = response as Cliente[];
+        
 
-        return cliente.map(
-          cliente => {
+        (response.content as Cliente[]).map(cliente => {
             cliente.nombre = cliente.nombre.toUpperCase();
            // cliente.apellido = cliente.apellido.toUpperCase();
 
@@ -47,13 +52,18 @@ export class ClientesService {
             
             //let dataPipe = new DatePipe('en-US');
             //cliente.createAt = dataPipe.transform(cliente.createAt, 'EEE dd, MMMM, yyyy');
-            cliente.createAt = formatDate(cliente.createAt, 'EEEE dd, MMMM yyyy', 'es');
+            //cliente.createAt = formatDate(cliente.createAt, 'EEEE dd, MMMM yyyy', 'es');
             return cliente;
-          }
-        )
-        
-      })
-    );
+          });
+          return response;
+      }),
+        tap((response:any) => {
+          console.log('ClienteService: tap 2', response);
+          (response.content as Cliente[]).forEach(cliente =>{
+            console.log(cliente.nombre);
+          });
+        })
+      );
 
   }
 
