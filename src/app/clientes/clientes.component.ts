@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { tap } from 'rxjs';
 import Swal from 'sweetalert2';
 import { Cliente } from './cliente';
@@ -14,11 +15,19 @@ export class ClientesComponent {
 
   clientes: Cliente[] = [];
 
-  constructor(private clienteService: ClientesService) {
+  constructor(private clienteService: ClientesService,
+              private activarRoute: ActivatedRoute) {
     
   }
   ngOnInit(): void {
-    let page = 0;
+    
+    this.activarRoute.paramMap.subscribe( params => {  
+    let page: number|any = params.get('page');
+  
+    if(!page){
+      page = 0;
+    }
+
     this.clienteService.getClientes(page)
     .pipe(
       tap((response:any) =>{
@@ -31,6 +40,7 @@ export class ClientesComponent {
     .subscribe(response => this.clientes = response.content as Cliente[]);
   
     console.log("Servicio desde el get");
+  });
   }
 
   delete(cliente: Cliente):void{
